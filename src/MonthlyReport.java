@@ -1,5 +1,4 @@
-import javax.lang.model.type.ArrayType;
-import javax.xml.namespace.QName;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -10,19 +9,19 @@ public class MonthlyReport {
     private ArrayList<Item> expenseItems;
     private String name;
 
-    MonthlyReport(String Data, int i) {
+    MonthlyReport(String data, int i) {
         //преобразовываем массив строк в список, чтобы убрать заголовочную строку
-        ArrayList<String> lines = new ArrayList<>(Arrays.asList(Data.split(System.lineSeparator())));
+        ArrayList<String> lines = new ArrayList<>(Arrays.asList(data.split(System.lineSeparator())));
         lines.remove(0);
         incomeAndExpenses = new ArrayList<>();
         for (String line : lines) {
-            Item item = new Item();
             String[] lineContents = line.split(",");
-            item.setItemName(lineContents[0]);
-            item.setExpense(Boolean.parseBoolean(lineContents[1]));
-            item.setQuantity(Integer.parseInt(lineContents[2]));
-            item.setSumOfOne(Integer.parseInt(lineContents[3]));
-            setName(i);
+            String itemName = lineContents[0];
+            boolean expense =  Boolean.parseBoolean(lineContents[1]);
+            int quantity = Integer.parseInt(lineContents[2]);
+            int sumOfOne = Integer.parseInt(lineContents[3]);
+            Item item = new Item(itemName,expense,quantity,sumOfOne);
+            name = Menu.monthNames[i];
             incomeAndExpenses.add(item);
         }
         divideForIncomeAndExpenses();
@@ -70,7 +69,7 @@ public class MonthlyReport {
     public int getIncome() {
         int income = 0;
         for (Item item : incomeItems) {
-            income += item.sumOfOne * item.quantity;
+            income += item.worth;
         }
         return income;
     }
@@ -78,52 +77,13 @@ public class MonthlyReport {
     public int getExpense() {
         int expense = 0;
         for (Item item : expenseItems) {
-            expense += item.sumOfOne * item.quantity;
+            expense += item.worth;
         }
         return expense;
     }
 
     public String getName(){
-        return this.name;
+        return name;
     }
-    private void setName(int number) {
-        switch (number) {
-            case 1:
-                this.name = "Январь";
-                break;
-            case 2:
-                this.name = "Февраль";
-                break;
-            case 3:
-                this.name = "Март";
-                break;
-            case 4:
-                this.name = "Апрель";
-                break;
-            case 5:
-                this.name = "Май";
-                break;
-            case 6:
-                this.name = "Июнь";
-                break;
-            case 7:
-                this.name = "Июль";
-                break;
-            case 8:
-                this.name = "Август";
-                break;
-            case 9:
-                this.name = "Сентябрь";
-                break;
-            case 10:
-                this.name = "Октябрь";
-                break;
-            case 11:
-                this.name = "Ноябрь";
-                break;
-            case 12:
-                this.name = "Декабрь";
-                break;
-        }
-    }
+
 }

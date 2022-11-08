@@ -3,6 +3,15 @@ public class Item {
     boolean isExpense;
     int quantity;
     int sumOfOne;
+    int worth;
+
+    public Item(String itemName, boolean expense, int quantity, int sumOfOne) {
+        this.itemName = itemName;
+        this.isExpense = expense;
+        this.quantity = quantity;
+        this.sumOfOne = sumOfOne;
+        worth = quantity*sumOfOne;
+    }
 
     public void setItemName(String itemName) {
         this.itemName = itemName;
@@ -21,17 +30,11 @@ public class Item {
     }
 
     public boolean getIsExpense(){
-        return this.isExpense;
+        return isExpense;
     }
 
     public int calculateWorth(){
-        return this.sumOfOne*this.quantity;
-    }
-    public int getQuantity() {
-        return quantity;
+        return worth;
     }
 
-    public int getSumOfOne() {
-        return sumOfOne;
-    }
 }
