@@ -19,7 +19,7 @@ public class Menu {
     private static final String YEAR = "2021";
     private static final String READING_ERROR_MESSAGE = "Отчеты не были считаны.";
 
-    public static String[] monthNames = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь"
+    public static String[] monthNames = {"","Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь"
             , "Ноябрь", "Декабрь"};
 
 
@@ -29,7 +29,8 @@ public class Menu {
         REPORT_RECONCILATION_COMMAND(3, " Сверка отчетов."),
         WRITE_ALL_MONTHS_REPORTS_COMMAND(4, " Вывести информацию о всех месячных отчетах."),
         WRITE_YEARS_REPORTS_COMMAND(5, " Вывести информацию и годовом отчете."),
-        EXIT_COMMAND(6, " Выход.");
+        EXIT_COMMAND(6, " Выход."),
+        DEFAULT_COMMAND(0, "");
         public final int number;
         public String message;
 
@@ -48,10 +49,14 @@ public class Menu {
         }
 
         public static Command findByKey(int i) {
-            return map.get(i);
+            if (map.get(i) != null) {
+                return map.get(i);
+            } else {
+                return DEFAULT_COMMAND;
+            }
         }
-
     }
+
 
     FileReader reader = new FileReader();
     static HashMap<Integer, MonthlyReport> monthlyReports = new HashMap<>();
@@ -168,7 +173,7 @@ public class Menu {
                 incomeMonthReport = month.getIncome();
                 expenseYearReport = yearlyReport.calculateExpenseForMonth(i);
                 expenseMonthReport = month.getExpense();
-                String monthName = yearlyReport.months.get(i).getMonthName();
+                String monthName = monthNames[i];
                 if (incomeYearReport != incomeMonthReport) {
                     System.out.println(String.format(INCOME_RECONCILATION_ERROR_PATTERN, monthName));
                     successFlag = false;
@@ -189,7 +194,7 @@ public class Menu {
 
     public void startMenu() {
         int command = 0;
-        while (command != -1) {
+        while (command != Command.EXIT_COMMAND.number) {
             printMenu();
             command = getCommand();
             runCommand(command);
